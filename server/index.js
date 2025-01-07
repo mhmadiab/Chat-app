@@ -22,17 +22,17 @@ app.use("/api/auth", userRoutes);
 app.use("/api/messages", messageRoutes);
 
 
-const PORT = process.env.PORT || 8550;
+const PORT = process.env.PORT || 8555;
 
 
-const server = app.listen(process.env.PORT, () =>
+const server = app.listen(PORT, () =>
     console.log(`Server started on ${process.env.PORT}`)
   );
 
 // Socket.IO Configuration
 const io = sockets(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: process.env.CLIENT_URL || "http://localhost:3000",
         credentials: true, 
     },
 })
