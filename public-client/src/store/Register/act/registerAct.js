@@ -5,7 +5,7 @@ const registerUser = createAsyncThunk("register/registerUser" , async(userData, 
     const {rejectWithValue}= ThunkAPI
     try {
 
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register` , userData)
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register` , userData)
         return response.data
         
     } catch (error) {
