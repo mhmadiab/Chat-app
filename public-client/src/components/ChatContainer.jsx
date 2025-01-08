@@ -8,7 +8,7 @@ import {v4 as uuidv4 }  from 'uuid'
 
 
 
-const ChatContainer = ({currentChat , currentUser , socket}) => {
+const ChatContainer = ({currentChat , currentUser , socket , isMobile, handleCloseChat}) => {
 
    const [msgs , setMsgs] = useState([])
    const [arrivalMessage , setArrivalMessage] = useState(null)
@@ -133,6 +133,9 @@ const ChatContainer = ({currentChat , currentUser , socket}) => {
               )}
                 </div>
                 <Logout />
+                {
+                  isMobile && <ToggleButton onClick={handleCloseChat}>X</ToggleButton>
+                }
             </div>
             <div className="chat-messages">
                {
@@ -166,23 +169,28 @@ const Container = styled.div`
   grid-template-rows: 10% 80% 10%;
   gap: 0.1rem;
   overflow: hidden;
-  @media screen and (min-width: 720px) and (max-width: 1080px) {
+
+  @media screen and (max-width: 1080px) {
     grid-template-rows: 15% 70% 15%;
   }
+
   .chat-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
+
     .user-details {
       display: flex;
       align-items: center;
       gap: 1rem;
+
       .avatar {
         img {
           height: 3rem;
         }
       }
+
       .username {
         h3 {
           color: white;
@@ -190,23 +198,28 @@ const Container = styled.div`
       }
     }
   }
+
   .chat-messages {
     padding: 1rem 2rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     overflow: auto;
+
     &::-webkit-scrollbar {
       width: 0.2rem;
+
       &-thumb {
         background-color: #ffffff39;
         width: 0.1rem;
         border-radius: 1rem;
       }
     }
+
     .message {
       display: flex;
       align-items: center;
+
       .content {
         max-width: 40%;
         overflow-wrap: break-word;
@@ -214,55 +227,79 @@ const Container = styled.div`
         font-size: 1.1rem;
         border-radius: 1rem;
         color: #d1d1d1;
-        @media screen and (min-width: 720px) and (max-width: 1080px) {
+
+        @media screen and (max-width: 720px) {
           max-width: 70%;
         }
       }
     }
+
     .sended {
       justify-content: flex-end;
+
       .content {
         background-color: #4f04ff21;
       }
     }
+
     .recieved {
       justify-content: flex-start;
+
       .content {
         background-color: #9900ff20;
       }
     }
   }
-    .typing-indicator {
+
+  .typing-indicator {
     display: flex;
     align-items: center;
     gap: 0.2rem;
     color: #d1d1d1;
     font-style: italic;
     padding: 0.5rem 2rem;
-}
-.typing-dots span {
+  }
+
+  .typing-dots span {
     display: inline-block;
     width: 5px;
     height: 5px;
     background-color: #d1d1d1;
     border-radius: 50%;
     animation: bounce 1.2s infinite;
-}
-.typing-dots span:nth-child(2) {
-    animation-delay: 0.2s;
-}
-.typing-dots span:nth-child(3) {
-    animation-delay: 0.4s;
-}
+  }
 
-@keyframes bounce {
+  .typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes bounce {
     0%, 80%, 100% {
-        transform: scale(0);
+      transform: scale(0);
     }
     40% {
-        transform: scale(1);
+      transform: scale(1);
     }
-}
-`
+  }
+`;
+
+
+const ToggleButton = styled.button`
+  background-color: #4f04ff21;
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+
+  &:hover {
+    background-color: #4f04ff40;
+  }
+`;
 
 export default ChatContainer

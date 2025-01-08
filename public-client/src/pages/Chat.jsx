@@ -18,6 +18,8 @@ const Chat = () => {
   const [currentUser, setCurrentUser] = useState(undefined)
   const [currentChat, setCurrentChat] = useState(undefined)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [showChat, setShowChat] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
 
   useEffect(()=>{
@@ -55,25 +57,64 @@ const Chat = () => {
     fetchUsers()
   },[currentUser, navigate])
 
+ const  handleCloseChat = ()=>{
+     setShowChat(false)
+     setCurrentChat(undefined);
+ }
+
+ console.log(showChat)
 
   const handleChatChange = (chat) =>{
     setCurrentChat(chat)
+    setShowChat(true);
   }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 720); // Consider screens <= 720px as mobile
+    };
+    handleResize(); // Check on initial render
+    window.addEventListener('resize', handleResize); // Add event listener for window resize
+    return () => window.removeEventListener('resize', handleResize); // Cleanup on unmount
+  }, []);
 
 
   return (
     <Container>
       <div className="container">
-          <Contact contacts={contacts} currentUser={currentUser} chatChange={handleChatChange}  />
-          {isLoaded && currentChat === undefined ? <Welcome currentUser={currentUser}/> : <ChatContainer currentChat={currentChat} currentUser={currentUser} socket={socket} />}
-          
+        {isMobile ? (
+          // For mobile, show chat container or contacts dynamically based on state
+          !showChat ? (
+            <>
+              {isLoaded && currentChat === undefined && (
+                <>
+                  <Contact contacts={contacts} currentUser={currentUser} chatChange={handleChatChange} />
+                  {/* <Welcome currentUser={currentUser} /> */}
+                </>
+              )}
+            </>
+          ) : (
+            <ChatContainer currentChat={currentChat} currentUser={currentUser} socket={socket} isMobile={isMobile} handleCloseChat={handleCloseChat} />
+          )
+        ) : (
+          // For larger screens, always show contacts and chat together
+          <>
+            <Contact contacts={contacts} currentUser={currentUser} chatChange={handleChatChange} />
+            {isLoaded && currentChat === undefined ? (
+              <Welcome currentUser={currentUser} />
+            ) : (
+              <ChatContainer currentChat={currentChat} currentUser={currentUser} socket={socket} />
+            )}
+          </>
+        )}
       </div>
     </Container>
-  )
-}
+  );
+};
+
 
 const Container = styled.div`
- height: 100vh;
+  height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -81,15 +122,27 @@ const Container = styled.div`
   gap: 1rem;
   align-items: center;
   background-color: #131324;
+
   .container {
-    height: 85vh;
-    width: 85vw;
+    height: 90vh;
+    width: 95vw;
     background-color: #00000076;
     display: grid;
-    grid-template-columns: 25% 75%;
-    @media screen and (min-width: 720px) and (max-width: 1080px) {
-      grid-template-columns: 35% 65%;
+    grid-template-columns: 25% 75%; /* Default grid for larger screens */
+    gap: 1rem;
+
+    @media screen and (max-width: 1080px) {
+      grid-template-columns: 35% 65%; /* Adjust for medium screens */
     }
-`
+
+    @media screen and (max-width: 720px) {
+      grid-template-columns: 1fr; /* Stack columns on small screens */
+      width: 100%;
+      height: 100%;
+    }
+  }
+`;
 
 export default Chat
+
+// {isLoaded && currentChat === undefined ? <Welcome currentUser={currentUser}/> : <ChatContainer currentChat={currentChat} currentUser={currentUser} socket={socket} />}
