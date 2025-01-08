@@ -129,14 +129,14 @@ const Container = styled.div`
     background-color: #00000076;
     display: grid;
     grid-template-columns: 25% 75%; /* Default grid for larger screens */
-    gap: 1rem;
+    
 
     @media screen and (max-width: 1080px) {
-      grid-template-columns: 35% 65%; /* Adjust for medium screens */
+      grid-template-columns: 35% 65%; 
     }
 
     @media screen and (max-width: 720px) {
-      grid-template-columns: 1fr; /* Stack columns on small screens */
+      grid-template-columns: 1fr; 
       width: 100%;
       height: 100%;
     }
